@@ -1,6 +1,6 @@
 const config = require("../utils/config");
 
-const {database} = require("../utils/admin");
+const {database, admin} = require("../utils/admin");
 
 const {firestore} = require("firebase-admin/lib/firestore")
 
@@ -36,6 +36,7 @@ exports.loginUser = (request, response) => {
         })
 }
 
+//registers a new user allowing them to have the same username as another user
 exports.registerUser = (request, response) => {
     const newUser = {
         firstName: request.body.firstName,
@@ -59,7 +60,7 @@ exports.registerUser = (request, response) => {
         newUser.email,
         newUser.password
     )
-        //gets user token
+        //gets user token as user is signed in automatically
         .then((userCredential) => {
             userId = userCredential.user.uid;
             return userCredential.user.getIdToken();
@@ -83,6 +84,7 @@ exports.registerUser = (request, response) => {
                 .doc(userId)
                 .set(userCredentials);
         })
+        //responds to client
         .then(() => {
             response.status(201).json({token})
         })
@@ -94,4 +96,105 @@ exports.registerUser = (request, response) => {
                 return response.status(500).json({general: 'Something went wrong, please try again '});
             }
         })
+}
+
+deleteImage = (imageName) => {
+    const storageBucket = admin.storage().bucket();
+    const path = `${imageName}`
+    return storageBucket.file(path).delete()
+        .then(() => {
+            return
+        })
+        .catch((error) => {
+            return
+        })
+}
+
+exports.uploadProfilePhoto = (request, response) => {
+    const BusBoy = require('busboy');
+    const path = require('path');
+    const os = require('os');
+    const fs = require('fs');
+    const busboy = new BusBoy({headers: request.headers});
+
+    let imageFileName;
+    let imageToBeUploaded = {};
+
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        if (mimetype !== 'image/png' && mimetype !== 'image/jpeg') {
+            return response.status(400).json({error: 'Wrong file type submitted'});
+        }
+        const imageExtension = filename.split('.')[filename.split('.').length - 1];
+        imageFileName = `${request.user.uid}.${imageExtension}`;
+        const filePath = path.join(os.tmpdir(), imageFileName);
+        imageToBeUploaded = {filePath, mimetype};
+        file.pipe(fs.createWriteStream(filePath));
+    });
+
+    deleteImage(imageFileName);
+
+    busboy.on('finish', () => {
+        admin
+            .storage()
+            .bucket()
+            .upload(imageToBeUploaded.filePath, {
+                destination: `images/${imageFileName}`,
+                resumable: false,
+                metadata: {
+                    metadata: {
+                        contentType: imageToBeUploaded.mimetype
+                    }
+                }
+            })
+            .then(() => {
+                const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/images/${imageFileName}?alt=media`;
+                return database.doc(`/Users/${request.user.uid}`).set({
+                    imageUrl
+                }, {merge: true});
+            })
+            .then(() => {
+                return response.json({message: 'Image uploaded successfully'});
+            })
+            .catch((error) => {
+                console.error(error);
+                return response.status(500).json({error: error.code});
+            });
+    });
+
+    busboy.end(request.rawBody);
+}
+
+exports.getUserDetails = (request, response) => {
+    let userData = {};
+    database
+        .collection("Users")
+        .doc(request.user.uid)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                userData.userCredentials = doc.data();
+                return response.json(userData);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            return response.status(500).json({error: error.code});
+        });
+}
+
+exports.updateUserDetails = (request, response) => {
+    database
+        .collection("Users")
+        .doc(request.user.uid)
+        .set(
+            request.body,
+            {merge: true}
+        )
+        .then(() => {
+            return response.json({message: 'Updated successfully'});
+        })
+        .catch((error) => {
+            console.error(error);
+            return response.status(500).json({message: "Cannot Update the value"});
+        });
 }

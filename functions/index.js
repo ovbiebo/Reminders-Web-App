@@ -1,14 +1,18 @@
 const functions = require('firebase-functions');
 const express = require('express');
 const app = express();
+const auth = require("./utils/auth");
 
-const {getAllReminders, addReminder, deleteReminder, editReminder} = require('./APIs/reminders');
+const {getAllReminders, addReminder, getReminder, deleteReminder, editReminder} = require('./APIs/reminders');
 
-app.get("/reminders", getAllReminders);
-app.post("/reminder", addReminder);
-app.delete("/reminder/:reminderId", deleteReminder);
-app.put("/reminder/:reminderId", editReminder);
+//reminders use cases
+app.get("/reminders", auth, getAllReminders);
+app.post("/reminder", auth, addReminder);
+app.get("/reminder/:reminderId", auth, getReminder);
+app.delete("/reminder/:reminderId", auth, deleteReminder);
+app.put("/reminder/:reminderId", auth, editReminder);
 
+//user profile use cases
 const {
     loginUser,
     registerUser,
@@ -16,8 +20,6 @@ const {
     getUserDetails,
     updateUserDetails
 } = require('./APIs/users');
-
-const auth = require("./utils/auth");
 
 app.post("/login", loginUser);
 app.post("/register", registerUser);

@@ -4,6 +4,7 @@ const {database} = require('../utils/admin')
 exports.getAllReminders = (request, response) => {
     database
         .collection('Reminders')
+        .where("owner", "==", request.user.uid)
         .orderBy('Start', "desc")
         .get()
         .then((data) => {
@@ -25,12 +26,34 @@ exports.getAllReminders = (request, response) => {
         });
 }
 
+exports.getReminder = (request, response) => {
+    const document = database
+        .collection('Reminders')
+        .doc(request.params.reminderId);
+
+    document
+        .get()
+        .then((reminder) => {
+            response.json({
+                reminderId: reminder.id,
+                startTime: reminder.data().Start,
+                endTime: reminder.data().End,
+                subject: reminder.data().Subject,
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+            return response.status(500).json({error: err.code});
+        });
+}
+
 exports.addReminder = (request, response) => {
     if (request.body.subject.trim() === '') {
         return response.status(400).json({body: 'Must not be empty'});
     }
 
     const newReminder = {
+        owner: request.user.uid,
         Start: firestore.Timestamp.fromDate(new Date()),
         End: firestore.Timestamp.fromDate(new Date()),
         Subject: request.body.subject
@@ -57,6 +80,9 @@ exports.deleteReminder = (request, response) => {
         .get()
         .then((docRef) => {
             if (!docRef.exists) {
+                if(doc.data().owner !== request.user.uid){
+                    return response.status(403).json({error:"UnAuthorized"})
+                }
                 return response.status(404).json({error: 'Reminder not found'});
             }
             return document.delete();

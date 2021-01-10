@@ -1,12 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
+import Login from './pages/login';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-    </div>
-  );
+function App() {
+    return (
+        <Router>
+            <div>
+                <Switch>
+                    <Route path={"/login"} component={Login}/>
+                    <Route path={"/"}/>
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

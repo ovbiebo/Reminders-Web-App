@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8c163ef1-5e2a-442e-ac7e-018972a38763" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/view/src/pages/login/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/src/pages/login/loginForm.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view/src/pages/login/styles.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/view/src/pages/signup/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/view/src/pages/signup/signupForm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/view/src/pages/signup/styles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/view/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/view/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/src/App.js" afterDir="false" />
     </list>
@@ -35,10 +34,15 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Pluralsight/building-applications-with-react-and-redux" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/view/src/pages" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Chidubem\Projects\Applications\Web\Reminders Web App\view\src\pages" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -53,7 +57,8 @@
       <workItem from="1610028604780" duration="48809000" />
       <workItem from="1610188607762" duration="113000" />
       <workItem from="1610235802197" duration="2416000" />
-      <workItem from="1610282895037" duration="17404000" />
+      <workItem from="1610282895037" duration="18507000" />
+      <workItem from="1610321950663" duration="1110000" />
     </task>
     <servers />
   </component>

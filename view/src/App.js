@@ -1,6 +1,7 @@
 import './App.css';
 
-import Login from './pages/login';
+import login from './pages/login';
+import signup from './pages/signup';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 function App() {
@@ -8,7 +9,8 @@ function App() {
         <Router>
             <div>
                 <Switch>
-                    <Route path={"/login"} component={Login}/>
+                    <Route path={"/login"} component={login}/>
+                    <Route path={"/signup"} component={signup}/>
                     <Route path={"/"}/>
                 </Switch>
             </div>
